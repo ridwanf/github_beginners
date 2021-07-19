@@ -1,1 +1,0 @@
-{"version":3,"file":"application.css","sources":["webpack://webpack_beginner/./src/lib.css","webpack://webpack_beginner/./src/application.scss"],"sourcesContent":["body{\n  background-color: magenta;\n}","body{background-image:linear-gradient(to right, #00467f, #a5cc82)}\n"],"mappings":"AAAA;AACA;AACA;ACFA;;","sourceRoot":""}
