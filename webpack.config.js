@@ -2,15 +2,26 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
-
+const { CleanWebpackPlugin }  = require('clean-webpack-plugin')
+const {WebpackManifestPlugin} = require('webpack-manifest-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   watch: false,
   mode:'production',
-  entry: './src/index.js',
+  entry: {
+    application: './src/javascripts/index.js',
+    admin: './src/javascripts/admin.js',
+  },
   devtool: 'cheap-module-source-map',
   output: {
-    filename: "application.js",
+    filename: "[name]-[contenthash].js",
     path: path.resolve(__dirname, 'build')
+  },
+  resolve: {
+    alias: {
+      CssFolder: path.resolve(__dirname, 'src/stylesheets/')
+    },
+    modules: [path.resolve(__dirname, 'src/downloaded_libs'), 'node_modules']
   },
   optimization: {
     minimizer: [
@@ -80,8 +91,13 @@ module.exports = {
     ]
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/template.html'
+    }),
+    new WebpackManifestPlugin(),
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'application.css'
+      filename: '[name]-[contenthash].css'
     })
   ],
 }
