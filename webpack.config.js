@@ -5,16 +5,23 @@ const TerserJSPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin }  = require('clean-webpack-plugin')
 const {WebpackManifestPlugin} = require('webpack-manifest-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const mode = "development"
 module.exports = {
+  devServer: {
+    port: 9000,
+    contentBase: path.resolve(__dirname, 'build'),
+    hot: true,
+    overlay: true,
+  },
   watch: false,
-  mode:'production',
+  mode: mode,
   entry: {
     application: './src/javascripts/index.js',
     admin: './src/javascripts/admin.js',
   },
   devtool: 'cheap-module-source-map',
   output: {
-    filename: "[name]-[contenthash].js",
+    filename: mode === 'production' ? "[name]-[contenthash].js" : '[name].js',
     path: path.resolve(__dirname, 'build')
   },
   resolve: {
@@ -49,6 +56,7 @@ module.exports = {
         {
           loader: 'postcss-loader',
           options: {
+            hmr: true,
             plugins: [
               require('autoprefixer')({
                 overrideBrowserlist: ['last 3 version', 'ie >9']
@@ -66,6 +74,7 @@ module.exports = {
         { 
           loader: 'postcss-loader',
           options: {
+            hmr: true,
             plugins: [
               require('autoprefixer')({
                 overrideBrowserlist: ['last 3 versions', 'ie >9']
@@ -82,7 +91,7 @@ module.exports = {
             loader: 'url-loader',
             options: {
               limit: 8192,
-              name:'[name].[hash:7].[ext]'
+              name: mode === "production" ? '[name].[hash:7].[ext]' : "[name].[ext]"
             },
           },
           {loader: 'image-webpack-loader'}
@@ -97,7 +106,7 @@ module.exports = {
     new WebpackManifestPlugin(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: '[name]-[contenthash].css'
+      filename: mode === "production" ? "[name]-[contenthash].css" : "[name].css"
     })
   ],
 }
